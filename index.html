@@ -81,6 +81,20 @@ iframe{display:block;width:100%;height:1040px;border:0;border-radius:18px;backgr
 .disclaimer{max-width:1160px;margin:0 auto 30px;padding:0 20px}.notice{padding:14px 16px;border-radius:14px;background:#fff9e8;border:1px solid #f0dda3;color:#66531f;font-size:12px;line-height:1.6}
 .footer{background:#fff;border-top:1px solid var(--line);text-align:center;padding:26px 18px;color:var(--muted);font-size:12px;line-height:1.7}
 .footer b{color:#0b3475}
+
+.emi-wrap{max-width:1200px;margin:0 auto;padding:28px 20px}
+.emi-card{background:linear-gradient(145deg,#ffffff,#f6f9ff);border:1px solid #d9e6f5;border-radius:26px;padding:26px;box-shadow:0 18px 42px rgba(29,70,129,.08)}
+.emi-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch}
+.emi-left h2{font-size:32px;margin:0 0 8px;color:#082e6c}.emi-left>p{margin:0 0 22px;color:var(--muted);line-height:1.6}
+.emi-field{margin-bottom:16px}.emi-field label{display:block;font-size:13px;font-weight:850;color:#17365f;margin-bottom:7px}
+.emi-input{display:flex;align-items:center;background:#fff;border:1px solid #d8e4f3;border-radius:14px;overflow:hidden}
+.emi-input span{padding:0 12px;color:#0b55bd;font-weight:900}.emi-input input{width:100%;border:0;outline:0;padding:13px 12px;font-size:16px;color:#10213d;background:transparent}
+.emi-result{background:linear-gradient(145deg,#062c69,#0d5fd0);color:#fff;border-radius:22px;padding:24px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 18px 36px rgba(8,61,137,.16)}
+.emi-result small{color:#c9dcf6;font-size:12px}.emi-monthly{font-size:44px;font-weight:950;letter-spacing:-1.5px;margin:5px 0 20px;color:#f4ce69}
+.emi-breakup{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.emi-box{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.13);border-radius:14px;padding:13px}
+.emi-box b{display:block;font-size:18px;margin-top:4px}.emi-note{margin-top:14px;color:#bdd3ee;font-size:11px;line-height:1.5}
+@media(max-width:700px){.emi-grid{grid-template-columns:1fr}.emi-wrap{padding-left:14px;padding-right:14px}.emi-card{padding:18px}.emi-left h2{font-size:28px}.emi-monthly{font-size:38px}}
 @media(max-width:920px){
   .hero{grid-template-columns:1fr;padding-top:32px}.hero h1{font-size:46px}.phone{min-height:480px}.stats{grid-template-columns:1fr 1fr}.services{grid-template-columns:1fr 1fr}.live-card{grid-template-columns:1fr}.live-points{grid-template-columns:1fr 1fr 1fr}
 }
@@ -160,6 +174,40 @@ iframe{display:block;width:100%;height:1040px;border:0;border-radius:18px;backgr
   </div>
 </section>
 
+
+<section class="emi-wrap" id="emi-calculator">
+  <div class="emi-card">
+    <div class="emi-grid">
+      <div class="emi-left">
+        <h2>EMI Calculator</h2>
+        <p>Estimate your monthly loan EMI instantly.</p>
+        <div class="emi-field">
+          <label for="loanAmount">Loan Amount</label>
+          <div class="emi-input"><span>₹</span><input id="loanAmount" type="number" min="1000" step="1000" value="500000" inputmode="decimal"></div>
+        </div>
+        <div class="emi-field">
+          <label for="interestRate">Annual Interest Rate</label>
+          <div class="emi-input"><input id="interestRate" type="number" min="0" step="0.1" value="11" inputmode="decimal"><span>%</span></div>
+        </div>
+        <div class="emi-field">
+          <label for="loanTenure">Loan Tenure</label>
+          <div class="emi-input"><input id="loanTenure" type="number" min="1" step="1" value="60" inputmode="numeric"><span>Months</span></div>
+        </div>
+      </div>
+      <div class="emi-result">
+        <small>Estimated Monthly EMI</small>
+        <div class="emi-monthly" id="monthlyEmi">₹0</div>
+        <div class="emi-breakup">
+          <div class="emi-box"><small>Principal Amount</small><b id="principalOut">₹0</b></div>
+          <div class="emi-box"><small>Total Interest</small><b id="interestOut">₹0</b></div>
+          <div class="emi-box"><small>Total Payment</small><b id="totalOut">₹0</b></div>
+          <div class="emi-box"><small>Tenure</small><b id="tenureOut">0 Months</b></div>
+        </div>
+        <div class="emi-note">Indicative calculation only. Actual EMI, rate, fees and repayment terms depend on the lender and final sanction.</div>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="live">
   <div class="live-card">
     <div>
@@ -189,5 +237,31 @@ iframe{display:block;width:100%;height:1040px;border:0;border-radius:18px;backgr
 </main>
 
 <footer class="footer"><b>VIHAA FINANCIAL SERVICES</b><br/>Your Goals • Our Support<br/>Financial-product enquiries are subject to lender policy and eligibility.</footer>
+
+<script>
+(function(){
+  const amount=document.getElementById('loanAmount');
+  const rate=document.getElementById('interestRate');
+  const tenure=document.getElementById('loanTenure');
+  const fmt=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+  function calc(){
+    const p=Math.max(0,parseFloat(amount.value)||0);
+    const annual=Math.max(0,parseFloat(rate.value)||0);
+    const n=Math.max(1,parseInt(tenure.value)||1);
+    const r=annual/12/100;
+    let emi;
+    if(r===0){emi=p/n}else{const x=Math.pow(1+r,n);emi=p*r*x/(x-1)}
+    const total=emi*n;
+    const interest=Math.max(0,total-p);
+    document.getElementById('monthlyEmi').textContent=fmt(emi);
+    document.getElementById('principalOut').textContent=fmt(p);
+    document.getElementById('interestOut').textContent=fmt(interest);
+    document.getElementById('totalOut').textContent=fmt(total);
+    document.getElementById('tenureOut').textContent=n+' Months';
+  }
+  [amount,rate,tenure].forEach(el=>el.addEventListener('input',calc));
+  calc();
+})();
+</script>
 </body>
 </html>
