@@ -233,7 +233,7 @@ iframe{display:block;width:100%;height:1040px;border:0;border-radius:18px;backgr
     <div class="smart-head">
       <div>
         <h2>Smart EMI Affordability Check</h2>
-        <p>See how your estimated new EMI fits alongside your current monthly obligations before you submit an enquiry.</p>
+        <p>See your current EMI burden separately from the impact of a proposed new loan before you submit an enquiry.</p>
       </div>
       <div class="smart-badge">Customer Benefit Tool</div>
     </div>
@@ -257,14 +257,14 @@ iframe{display:block;width:100%;height:1040px;border:0;border-radius:18px;backgr
         </div>
       </div>
       <div class="smart-result">
-        <small>Estimated EMI-to-Income Ratio</small>
-        <div class="smart-score"><b id="foirOut">0%</b><span>after proposed EMI</span></div>
-        <div class="smart-meter"><i id="foirBar"></i></div>
+        <small>Current EMI Burden</small>
+        <div class="smart-score"><b id="currentFoirOut">0%</b><span>before new loan</span></div>
+        <div class="smart-meter"><i id="currentFoirBar"></i></div>
         <div class="smart-kpis">
-          <div class="smart-kpi"><small>Proposed EMI</small><b id="newEmiOut">₹0</b></div>
-          <div class="smart-kpi"><small>Total Monthly EMIs</small><b id="totalEmiOut">₹0</b></div>
-          <div class="smart-kpi"><small>Income After EMIs</small><b id="freeIncomeOut">₹0</b></div>
-          <div class="smart-kpi"><small>Monthly Income</small><b id="incomeOut">₹0</b></div>
+          <div class="smart-kpi"><small>Existing EMIs</small><b id="existingEmiOut">₹0</b></div>
+          <div class="smart-kpi"><small>Proposed New EMI</small><b id="newEmiOut">₹0</b></div>
+          <div class="smart-kpi"><small>After Proposed Loan</small><b id="foirOut">0%</b></div>
+          <div class="smart-kpi"><small>Income After All EMIs</small><b id="freeIncomeOut">₹0</b></div>
         </div>
         <div class="smart-tip" id="smartTip">Enter your monthly income and existing EMIs to see an indicative affordability view. This is not a lender eligibility decision; lender criteria vary.</div>
       </div>
@@ -345,14 +345,15 @@ iframe{display:block;width:100%;height:1040px;border:0;border-radius:18px;backgr
     const old=Math.max(0,parseFloat(existing.value)||0);
     const fresh=proposedEmi();
     const total=old+fresh;
+    const currentRatio=inc>0?(old/inc)*100:0;
     const ratio=inc>0?(total/inc)*100:0;
     const free=inc-total;
+    document.getElementById('currentFoirOut').textContent=(inc>0?currentRatio:0).toFixed(1)+'%';
+    document.getElementById('currentFoirBar').style.width=Math.min(100,Math.max(0,currentRatio))+'%';
     document.getElementById('foirOut').textContent=(inc>0?ratio:0).toFixed(1)+'%';
-    document.getElementById('foirBar').style.width=Math.min(100,Math.max(0,ratio))+'%';
+    document.getElementById('existingEmiOut').textContent=fmt(old);
     document.getElementById('newEmiOut').textContent=fmt(fresh);
-    document.getElementById('totalEmiOut').textContent=fmt(total);
     document.getElementById('freeIncomeOut').textContent=free>=0?fmt(free):'-'+fmt(Math.abs(free));
-    document.getElementById('incomeOut').textContent=fmt(inc);
     let tip='Enter your monthly income and existing EMIs to see an indicative affordability view. This is not a lender eligibility decision; lender criteria vary.';
     if(inc>0){
       if(ratio<35) tip='Your estimated EMI load is relatively lower compared with the income entered. Keep a buffer for living costs and emergencies; lender rules still vary.';
