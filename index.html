@@ -258,8 +258,8 @@ iframe{display:block;width:100%;height:1040px;border:0;border-radius:18px;backgr
       <div class="analytics-live"><span class="analytics-dot"></span> LIVE</div>
     </div>
     <div class="analytics-grid">
-      <div class="analytics-kpi"><small>Total Visitor Browsers</small><b id="anTotalVisitors">—</b><span>Approx. unique browsers</span></div>
-      <div class="analytics-kpi"><small>Today Visitor Browsers</small><b id="anTodayVisitors">—</b><span>Approx. unique browsers today</span></div>
+      <div class="analytics-kpi"><small>Total Page Views</small><b id="anTotalVisitors">—</b><span>Every page load / refresh</span></div>
+      <div class="analytics-kpi"><small>Today Page Views</small><b id="anTodayVisitors">—</b><span>Every page load / refresh today</span></div>
       <div class="analytics-kpi"><small>Check Eligibility Clicks</small><b id="anEligibilityClicks">—</b><span>All-time tracked clicks</span></div>
       <div class="analytics-kpi"><small>Customer Form Opens</small><b id="anFormOpens">—</b><span>All-time tracked opens</span></div>
     </div>
@@ -592,51 +592,62 @@ iframe{display:block;width:100%;height:1040px;border:0;border-radius:18px;backgr
 })();
 
 (function(){
-  const NS='vihaa-financial-services';
-  const BASE='https://api.counterapi.dev/v1/'+NS+'/';
+  const BASE='https://countapi.mileshilliard.com/api/v1/';
   const today=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Kolkata'}).replaceAll('-','');
-  const getCount=v=>{
-    if(typeof v==='number') return v;
-    if(!v||typeof v!=='object') return null;
-    const candidates=[v.count,v.value,v.up_count,v.data?.count,v.data?.value,v.data?.up_count,v.data?.counter?.count];
-    for(const n of candidates){ if(Number.isFinite(Number(n))) return Number(n); }
-    return null;
+  const keys={
+    total:'vihaa_finance_total_pageviews_v1',
+    today:'vihaa_finance_pageviews_'+today,
+    eligibility:'vihaa_finance_eligibility_clicks_v1',
+    forms:'vihaa_finance_form_opens_v1'
   };
-  async function req(key,up=false){
+  async function hit(key){
     try{
-      const r=await fetch(BASE+encodeURIComponent(key)+(up?'/up':''),{cache:'no-store'});
+      const r=await fetch(BASE+'hit/'+encodeURIComponent(key),{cache:'no-store'});
       if(!r.ok) throw new Error('counter');
-      return getCount(await r.json());
+      const d=await r.json();
+      return Number(d.value);
     }catch(e){ return null; }
   }
-  function show(id,n){ const el=document.getElementById(id); if(el) el.textContent=n==null?'—':Number(n).toLocaleString('en-IN'); }
+  async function get(key){
+    try{
+      const r=await fetch(BASE+'get/'+encodeURIComponent(key),{cache:'no-store'});
+      if(r.status===404) return 0;
+      if(!r.ok) throw new Error('counter');
+      const d=await r.json();
+      return Number(d.value);
+    }catch(e){ return null; }
+  }
+  function show(id,n){
+    const el=document.getElementById(id);
+    if(el) el.textContent=(n==null||Number.isNaN(Number(n)))?'—':Number(n).toLocaleString('en-IN');
+  }
   async function initAnalytics(){
-    const visitorKey='vihaa_visitor_counted';
-    const todayKey='vihaa_today_'+today;
-    let total,todayCount;
-    if(!localStorage.getItem(visitorKey)){
-      total=await req('unique-visitors',true);
-      if(total!=null) localStorage.setItem(visitorKey,'1');
-    }else total=await req('unique-visitors');
-    if(!localStorage.getItem(todayKey)){
-      todayCount=await req('visitors-'+today,true);
-      if(todayCount!=null) localStorage.setItem(todayKey,'1');
-    }else todayCount=await req('visitors-'+today);
-    const clicks=await req('eligibility-clicks');
-    const forms=await req('form-opens');
-    show('anTotalVisitors',total); show('anTodayVisitors',todayCount);
-    show('anEligibilityClicks',clicks); show('anFormOpens',forms);
+    const [total,todayCount,clicks,forms]=await Promise.all([
+      hit(keys.total),
+      hit(keys.today),
+      get(keys.eligibility),
+      get(keys.forms)
+    ]);
+    show('anTotalVisitors',total);
+    show('anTodayVisitors',todayCount);
+    show('anEligibilityClicks',clicks);
+    show('anFormOpens',forms);
   }
   async function bump(key,id){
-    const n=await req(key,true); show(id,n);
+    const n=await hit(key);
+    show(id,n);
   }
   document.addEventListener('click',e=>{
     const a=e.target.closest('a,button');
     if(!a) return;
     const href=(a.getAttribute('href')||'').toLowerCase();
     const txt=(a.textContent||'').toLowerCase();
-    if(href.includes('#apply') || txt.includes('check eligibility')) bump('eligibility-clicks','anEligibilityClicks');
-    if(href.includes('docs.google.com/forms') || txt.includes('customer form') || txt.includes('open form')) bump('form-opens','anFormOpens');
+    if(href.includes('#apply') || txt.includes('check eligibility')){
+      bump(keys.eligibility,'anEligibilityClicks');
+    }
+    if(href.includes('docs.google.com/forms') || txt.includes('customer form') || txt.includes('open form')){
+      bump(keys.forms,'anFormOpens');
+    }
   },true);
   initAnalytics();
 })();
