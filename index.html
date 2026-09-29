@@ -637,18 +637,49 @@ iframe{display:block;width:100%;height:1040px;border:0;border-radius:18px;backgr
     const n=await hit(key);
     show(id,n);
   }
+
+  let formOpenedThisPage=false;
+  function countFormOpen(){
+    if(formOpenedThisPage) return;
+    formOpenedThisPage=true;
+    bump(keys.forms,'anFormOpens');
+  }
+
+  // If visitor lands directly on the enquiry section, count it as a form open.
+  if(location.hash.toLowerCase()==='#apply'){
+    countFormOpen();
+  }
+
+  window.addEventListener('hashchange',()=>{
+    if(location.hash.toLowerCase()==='#apply'){
+      formOpenedThisPage=false;
+      countFormOpen();
+    }
+  });
+
   document.addEventListener('click',e=>{
     const a=e.target.closest('a,button');
     if(!a) return;
     const href=(a.getAttribute('href')||'').toLowerCase();
     const txt=(a.textContent||'').toLowerCase();
-    if(href.includes('#apply') || txt.includes('check eligibility')){
+
+    const isApply =
+      href.includes('#apply') ||
+      txt.includes('check eligibility');
+
+    const isFormLink =
+      href.includes('docs.google.com/forms') ||
+      txt.includes('customer form') ||
+      txt.includes('open form');
+
+    if(isApply){
       bump(keys.eligibility,'anEligibilityClicks');
-    }
-    if(href.includes('docs.google.com/forms') || txt.includes('customer form') || txt.includes('open form')){
-      bump(keys.forms,'anFormOpens');
+      countFormOpen();
+    } else if(isFormLink){
+      countFormOpen();
     }
   },true);
+
   initAnalytics();
 })();
 </script>
