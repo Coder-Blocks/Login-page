@@ -114,6 +114,26 @@ iframe{display:block;width:100%;height:1040px;border:0;border-radius:18px;backgr
 .benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.benefit{background:#f8fbff;border:1px solid #dfe9f6;border-radius:16px;padding:15px}.benefit b{display:block;color:#0b3475;margin-bottom:5px}.benefit span{font-size:12px;line-height:1.45;color:var(--muted)}
 @media(max-width:800px){.smart-grid{grid-template-columns:1fr}.benefits{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.smart-wrap{padding-left:14px;padding-right:14px}.smart-card{padding:18px}.smart-head{flex-direction:column}.smart-head h2{font-size:28px}.smart-form{grid-template-columns:1fr}.benefits{grid-template-columns:1fr}}
+
+.bt-wrap{max-width:1200px;margin:0 auto;padding:0 20px 34px}
+.bt-card{background:linear-gradient(145deg,#ffffff,#f7fbff);border:1px solid #d9e6f5;border-radius:26px;padding:26px;box-shadow:0 18px 42px rgba(29,70,129,.08)}
+.bt-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:22px}
+.bt-head h2{font-size:32px;margin:0 0 8px;color:#082e6c}.bt-head p{margin:0;color:var(--muted);line-height:1.6;max-width:760px}
+.bt-badge{white-space:nowrap;background:#eaf7ef;color:#0b7a4f;border:1px solid #cfe9d8;padding:9px 12px;border-radius:999px;font-size:12px;font-weight:900}
+.bt-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch}
+.bt-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.bt-field label{display:block;font-size:13px;font-weight:850;color:#17365f;margin-bottom:7px}
+.bt-input{display:flex;align-items:center;border:1px solid #d8e4f3;border-radius:14px;overflow:hidden;background:#fbfdff}
+.bt-input span{padding:0 12px;color:#0b55bd;font-weight:900}.bt-input input{width:100%;border:0;outline:0;padding:13px 12px;font-size:16px;background:transparent;color:#10213d}
+.bt-result{background:linear-gradient(145deg,#06366f,#0a67c8);color:#fff;border-radius:22px;padding:24px;display:flex;flex-direction:column;justify-content:center}
+.bt-saving-label{font-size:12px;color:#c9dcf5}.bt-saving{font-size:44px;font-weight:950;color:#f2ce6a;letter-spacing:-1px;margin:5px 0 18px}
+.bt-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bt-kpi{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.13);border-radius:14px;padding:13px}.bt-kpi small{display:block;color:#c4d8f2}.bt-kpi b{display:block;font-size:18px;margin-top:4px}
+.bt-message{margin-top:14px;padding:12px 13px;border-radius:12px;background:rgba(255,255,255,.08);font-size:12px;line-height:1.55;color:#e0ecfb}
+.bt-benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.bt-benefit{background:#f8fbff;border:1px solid #dfe9f6;border-radius:16px;padding:15px}.bt-benefit b{display:block;color:#0b3475;margin-bottom:5px}.bt-benefit span{font-size:12px;line-height:1.45;color:var(--muted)}
+@media(max-width:800px){.bt-grid{grid-template-columns:1fr}.bt-benefits{grid-template-columns:1fr}}
+@media(max-width:600px){.bt-wrap{padding-left:14px;padding-right:14px}.bt-card{padding:18px}.bt-head{flex-direction:column}.bt-head h2{font-size:28px}.bt-form{grid-template-columns:1fr}.bt-saving{font-size:38px}}
 @media(max-width:920px){
   .hero{grid-template-columns:1fr;padding-top:32px}.hero h1{font-size:46px}.phone{min-height:480px}.stats{grid-template-columns:1fr 1fr}.services{grid-template-columns:1fr 1fr}.live-card{grid-template-columns:1fr}.live-points{grid-template-columns:1fr 1fr 1fr}
 }
@@ -145,6 +165,7 @@ iframe{display:block;width:100%;height:1040px;border:0;border-radius:18px;backgr
     <div class="hero-actions">
       <a class="btn btn-gold" href="#apply">Apply Now →</a>
       <a class="btn btn-primary" href="#services">View Loan Services</a>
+      <a class="btn" style="background:#eaf7ef;border:1px solid #cfe9d8;color:#0b7a4f" href="#bt-calculator">BT Savings Calculator</a>
       <a class="btn" style="background:#fff;border:1px solid #d9e6f5;color:#0b3475" href="udyam.html">Udyam Registration</a>
     </div>
     <div class="mini-features"><span>Quick Process</span><span>Trusted Support</span><span>Multiple Loan Options</span><span>Udyam Registered Micro Enterprise</span></div>
@@ -229,6 +250,66 @@ iframe{display:block;width:100%;height:1040px;border:0;border-radius:18px;backgr
   </div>
 </section>
 
+
+<section class="bt-wrap" id="bt-calculator">
+  <div class="bt-card">
+    <div class="bt-head">
+      <div>
+        <h2>Balance Transfer EMI Savings Calculator</h2>
+        <p>Compare your current loan with a possible balance transfer. A lower rate or a different tenure may reduce your monthly EMI, but actual savings depend on lender terms, fees and eligibility.</p>
+      </div>
+      <div class="bt-badge">Customer Savings Tool</div>
+    </div>
+    <div class="bt-grid">
+      <div>
+        <div class="bt-form">
+          <div class="bt-field">
+            <label for="btOutstanding">Outstanding Loan Amount</label>
+            <div class="bt-input"><span>₹</span><input id="btOutstanding" type="number" min="1000" step="1000" value="500000" inputmode="decimal"></div>
+          </div>
+          <div class="bt-field">
+            <label for="btCurrentRate">Current Interest Rate</label>
+            <div class="bt-input"><input id="btCurrentRate" type="number" min="0" step="0.1" value="16" inputmode="decimal"><span>%</span></div>
+          </div>
+          <div class="bt-field">
+            <label for="btRemainingTenure">Current Remaining Tenure</label>
+            <div class="bt-input"><input id="btRemainingTenure" type="number" min="1" step="1" value="48" inputmode="numeric"><span>Months</span></div>
+          </div>
+          <div class="bt-field">
+            <label for="btNewRate">Proposed BT Interest Rate</label>
+            <div class="bt-input"><input id="btNewRate" type="number" min="0" step="0.1" value="11" inputmode="decimal"><span>%</span></div>
+          </div>
+          <div class="bt-field">
+            <label for="btNewTenure">Proposed BT Tenure</label>
+            <div class="bt-input"><input id="btNewTenure" type="number" min="1" step="1" value="48" inputmode="numeric"><span>Months</span></div>
+          </div>
+          <div class="bt-field">
+            <label for="btFees">Transfer / Processing Fees</label>
+            <div class="bt-input"><span>₹</span><input id="btFees" type="number" min="0" step="100" value="0" inputmode="decimal"></div>
+          </div>
+        </div>
+        <div class="bt-benefits">
+          <div class="bt-benefit"><b>Check EMI Reduction</b><span>See the difference between current EMI and proposed BT EMI.</span></div>
+          <div class="bt-benefit"><b>See Net Savings</b><span>Estimated interest benefit is shown after deducting the fees you enter.</span></div>
+          <div class="bt-benefit"><b>Compare Before You Transfer</b><span>If the new terms do not save money, the calculator will tell you clearly.</span></div>
+        </div>
+      </div>
+      <div class="bt-result">
+        <div class="bt-saving-label">Estimated Monthly EMI Reduction</div>
+        <div class="bt-saving" id="btMonthlySaving">₹0</div>
+        <div class="bt-kpis">
+          <div class="bt-kpi"><small>Current EMI</small><b id="btCurrentEmi">₹0</b></div>
+          <div class="bt-kpi"><small>Proposed BT EMI</small><b id="btNewEmi">₹0</b></div>
+          <div class="bt-kpi"><small>Current Remaining Interest</small><b id="btCurrentInterest">₹0</b></div>
+          <div class="bt-kpi"><small>New Interest + Fees</small><b id="btNewInterest">₹0</b></div>
+          <div class="bt-kpi"><small>Estimated Net Savings</small><b id="btNetSaving">₹0</b></div>
+          <div class="bt-kpi"><small>Rate Difference</small><b id="btRateDiff">0%</b></div>
+        </div>
+        <div class="bt-message" id="btMessage">Enter your current loan and proposed balance-transfer terms to compare.</div>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="smart-wrap" id="smart-affordability">
   <div class="smart-card">
     <div class="smart-head">
@@ -375,6 +456,59 @@ iframe{display:block;width:100%;height:1040px;border:0;border-radius:18px;backgr
   }
   [income,existing,amount,rate,tenure].forEach(el=>el.addEventListener('input',updateSmart));
   updateSmart();
+})();
+
+(function(){
+  const P=document.getElementById('btOutstanding');
+  const cr=document.getElementById('btCurrentRate');
+  const ct=document.getElementById('btRemainingTenure');
+  const nr=document.getElementById('btNewRate');
+  const nt=document.getElementById('btNewTenure');
+  const fees=document.getElementById('btFees');
+  const fmt=n=>(n<0?'-':'')+'₹'+Math.round(Math.abs(n)).toLocaleString('en-IN');
+  function emi(p,annual,n){
+    if(!p || !n) return 0;
+    const r=Math.max(0,annual)/12/100;
+    if(r===0) return p/n;
+    const x=Math.pow(1+r,n);
+    return p*r*x/(x-1);
+  }
+  function calcBT(){
+    const p=Math.max(0,parseFloat(P.value)||0);
+    const currentRate=Math.max(0,parseFloat(cr.value)||0);
+    const currentTenure=Math.max(1,parseInt(ct.value)||1);
+    const newRate=Math.max(0,parseFloat(nr.value)||0);
+    const newTenure=Math.max(1,parseInt(nt.value)||1);
+    const fee=Math.max(0,parseFloat(fees.value)||0);
+    const currentEmi=emi(p,currentRate,currentTenure);
+    const newEmi=emi(p,newRate,newTenure);
+    const currentTotal=currentEmi*currentTenure;
+    const newTotal=newEmi*newTenure+fee;
+    const currentInterest=Math.max(0,currentTotal-p);
+    const newInterest=Math.max(0,(newEmi*newTenure)-p)+fee;
+    const monthlySaving=currentEmi-newEmi;
+    const netSaving=currentTotal-newTotal;
+    document.getElementById('btCurrentEmi').textContent=fmt(currentEmi);
+    document.getElementById('btNewEmi').textContent=fmt(newEmi);
+    document.getElementById('btMonthlySaving').textContent=fmt(monthlySaving);
+    document.getElementById('btCurrentInterest').textContent=fmt(currentInterest);
+    document.getElementById('btNewInterest').textContent=fmt(newInterest);
+    document.getElementById('btNetSaving').textContent=fmt(netSaving);
+    document.getElementById('btRateDiff').textContent=(currentRate-newRate).toFixed(1)+'%';
+    let msg='';
+    if(monthlySaving>0 && netSaving>0){
+      msg='With the values entered, the proposed balance transfer may reduce your monthly EMI and may also reduce your remaining repayment cost. Final savings depend on the lender quotation, foreclosure charges, processing fees and actual sanction.';
+    }else if(monthlySaving>0 && netSaving<=0){
+      msg='The proposed BT lowers the monthly EMI, but the longer tenure/fees may increase the overall remaining cost. Compare total repayment, not only EMI.';
+    }else if(monthlySaving<=0 && netSaving>0){
+      msg='The proposed BT may reduce total remaining cost, but it does not reduce the monthly EMI with the tenure entered.';
+    }else{
+      msg='With the values entered, this balance transfer does not show an estimated savings advantage. Try the actual lender rate, tenure and fees before deciding.';
+    }
+    document.getElementById('btMessage').textContent=msg;
+  }
+  [P,cr,ct,nr,nt,fees].forEach(el=>el.addEventListener('input',calcBT));
+  calcBT();
 })();
 </script>
 </body>
